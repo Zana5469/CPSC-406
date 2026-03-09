@@ -415,7 +415,7 @@ What is the easiest and best way to implement DFAs in programming?
     \item A state will be accepting if the first part is $p_0$ or if the second part is not $q_0$.
 \end{enumerate}   
 
-\textbf{Exercise 2.2.7}
+\textbf{ITALC, Exercise 2.2.7}
 \textbf{Basis:} \\
 Let the length of the string be $n=0$. The empty string, $\epsilon$, is of length 0.
 \[ \hat{\delta}(q, \epsilon) = q \]
@@ -629,6 +629,81 @@ What other mathematical properties aside from intersection and union could be ap
 
 \subsubsection{Question}
 Do you always have to change NFAs to be DFAs when programming?
+
+\subsection{Week 4}
+
+\subsubsection{HW 4}
+
+\textbf{Exercise (Kleene's Algorithm)}
+
+$k=0$:
+\begin{align*}
+R_{11}^{(0)} &= \varepsilon + a \\
+R_{12}^{(0)} &= b \\
+R_{21}^{(0)} &= a \\
+R_{22}^{(0)} &= \varepsilon + b
+\end{align*}
+
+$k=1$:
+\begin{align*}
+R_{11}^{(1)} &= R_{11}^{(0)} + R_{11}^{(0)}(R_{11}^{(0)})^* R_{11}^{(0)} \\
+&= (\varepsilon + a) + (\varepsilon + a)(\varepsilon + a)^* (\varepsilon + a) \\
+&= a^* \\[10pt]
+%
+R_{12}^{(1)} &= R_{12}^{(0)} + R_{11}^{(0)}(R_{11}^{(0)})^* R_{12}^{(0)} \\
+&= b + (\varepsilon + a)(\varepsilon + a)^* b \\
+&= a^* b \\[10pt]
+%
+R_{21}^{(1)} &= R_{21}^{(0)} + R_{21}^{(0)}(R_{11}^{(0)})^* R_{11}^{(0)} \\
+&= a + a(\varepsilon + a)^* (\varepsilon + a) \\ 
+&= aa^* \\[10pt]
+%
+R_{22}^{(1)} &= R_{22}^{(0)} + R_{21}^{(0)}(R_{11}^{(0)})^* R_{12}^{(0)} \\
+&= (\varepsilon + b) + a(\varepsilon + a)^* b \\
+&= \varepsilon + b + aa^* b
+\end{align*}
+
+$k=2$:
+\begin{align*}
+R_{11}^{(2)} &= R_{11}^{(1)} + R_{12}^{(1)}(R_{22}^{(1)})^* R_{21}^{(1)} \\
+&= a^* + (a^* b)(\varepsilon + b + aa^* b)^* (aa^*) \\
+&= a^* + (a^* b)(b + aa^* b)^* (aa^*)
+\end{align*}
+
+\vspace{1cm}
+\textbf{Final Regular Expression:}
+\[ R = a^* + a^* b (b + aa^* b)^* aa^* \]
+
+\textbf{ITALC, Exercise 4.4.2.}
+
+a. The state minimization table:
+\begin{tabular}{c|cccccccc}
+    & A & B & C & D & E & F & G & H \\ \hline
+    B & X &   &   &   &   &   &   &   \\
+    C & X & X &   &   &   &   &   &   \\
+    D &   & X & X &   &   &   &   &   \\
+    E & X &   & X & X &   &   &   &   \\
+    F & X & X &   & X & X &   &   &   \\
+    G &   & X & X &   & X & X &   &   \\
+    H & X &   & X & X &   & X & X &   \\
+    I & X & X &   & X & X &   & X & X \\
+\end{tabular}
+
+\vspace{2cm}
+
+b. The minimized DFA diagram:
+\begin{tikzpicture}[shorten >=1pt, node distance=3cm, on grid, auto]
+    \node[state, initial, initial text=] (q0) {\{A, D, G\}};
+    \node[state] (q1) [right=of q0] {\{B, E, H\}};
+    \node[state, accepting] (q2) [right=of q1] {\{C, F, I\}};
+
+    \path[->] 
+        (q0) edge node {} (q1)
+        (q1) edge node {} (q2);
+\end{tikzpicture}
+
+\subsubsection{Question}
+Where would an implementation of Kleene's Algorithm be the most beneficial?
 
 \section{Synthesis}
 
