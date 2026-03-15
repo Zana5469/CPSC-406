@@ -705,6 +705,50 @@ b. The minimized DFA diagram:
 \subsubsection{Question}
 Where would an implementation of Kleene's Algorithm be the most beneficial?
 
+\subsection{Week 5}
+
+\subsubsection{Problems on the Pumping Lemma}
+
+\textbf{Exercise}
+
+\textbf{$L_1 = \{ a^n b^m \in \{a,b\}^* \; | \; n,m \in \mathbb N, ~ n > m \ge 0 \}$}
+\begin{itemize}
+    \item \textbf{String Choice:} Let $s = a^{p+1}b^p$. Note $s \in L_1$ because $p+1 > p$ and $|s| \ge p$.
+    \item \textbf{Decomposition:} $s = xyz$ such that $|xy| \le p$ and $|y| > 0$. Since the first $p$ characters are all $a$'s, $y = a^k$ for some $1 \le k \le p$.
+    \item \textbf{Pumping:} Consider $i=0$ (pumping down). The resulting string is $s' = xy^0z = xz$.
+    \item \textbf{Contradiction:} The number of $a$'s in $s'$ is $(p+1) - k$. Since $k \ge 1$, $(p+1) - k \le p$. The number of $b$'s remains $p$. Thus, the number of $a$'s is no longer strictly greater than the number of $b$'s ($p-k+1 \not> p$), so $s' \notin L_1$.
+\end{itemize}
+
+\textbf{$L_2 = \{ a^{n^2} \in \{a\}^* \; | \; n \in \mathbb N, ~ n \ge 1 \}$}
+\begin{itemize}
+    \item \textbf{String Choice:} Let $s = a^{p^2}$. Note $s \in L_2$ and $|s| = p^2 \ge p$.
+    \item \textbf{Decomposition:} $y = a^k$ where $1 \le k \le p$.
+    \item \textbf{Pumping:} Consider $i=2$ (pumping up). The length of $xy^2z$ is $|s| + |y| = p^2 + k$.
+    \item \textbf{Contradiction:} We know that $p^2 < p^2 + k$. Since $k \le p$, we also know:
+    \[ p^2 + k < p^2 + 2p + 1 = (p+1)^2 \]
+    Because $p^2 < |xy^2z| < (p+1)^2$, the length is trapped between two consecutive perfect squares and cannot be a perfect square itself. Thus, $xy^2z \notin L_2$.
+\end{itemize}
+
+\textbf{$L_3 = \{ a^p \in \{a\}^\ast \; | \; p \in \mathbb N, ~ p\,\,\mathrm{prime} \}$}
+\begin{itemize}
+    \item \textbf{String Choice:} Let $n$ be a prime such that $n > p$. Let $s = a^n$.
+    \item \textbf{Decomposition:} $y = a^k$ where $1 \le k \le p$. The length of $s$ is $n$.
+    \item \textbf{Pumping:} Let $i = n+1$. The length of $xy^{n+1}z$ is:
+    \[ |s| + n|y| = n + nk = n(1+k) \]
+    \item \textbf{Contradiction:} Since $n > 1$ and $(1+k) > 1$, the length $n(1+k)$ is a composite number. A string of composite length is not in $L_3$, so $L_3$ is not regular.
+\end{itemize}
+
+\textbf{$L_4 = \{ a^k b^m a^{k+m} \; | \; k,m \geq 0\}$}
+\begin{itemize}
+    \item \textbf{String Choice:} Let $s = a^p b^p a^{2p}$. Note $s \in L_4$ because $p + p = 2p$.
+    \item \textbf{Decomposition:} Since $|xy| \le p$, $y$ must consist only of $a$'s from the first block. Thus $y = a^j$ for $1 \le j \le p$.
+    \item \textbf{Pumping:} Let $i = 2$. The new string is $s' = a^{p+j} b^p a^{2p}$.
+    \item \textbf{Contradiction:} For $s' \in L_4$, the sum of the exponents of the first two blocks must equal the exponent of the last block. However, $(p+j) + p = 2p + j$. Since $j \ge 1$, $2p + j \neq 2p$. Thus $s' \notin L_4$.
+\end{itemize}
+
+\subsubsection{Question}
+Is the pumping lemma specific only to computer science, or could it be applicable to other fields?
+
 \section{Synthesis}
 
 \section{Evidence of Participation}
