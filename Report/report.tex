@@ -23,6 +23,7 @@
 \usepackage{listings}
 \usepackage[utf8]{inputenc}                                                    
 \usepackage[T1]{fontenc}                                                       
+\usepackage{booktabs}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -748,6 +749,67 @@ Where would an implementation of Kleene's Algorithm be the most beneficial?
 
 \subsubsection{Question}
 Is the pumping lemma specific only to computer science, or could it be applicable to other fields?
+
+\subsection{Week 6}
+
+\subsubsection{HW 6}
+
+\textbf{Exercise A}
+
+\begin{enumerate}
+    \item \textbf{TM for $10^n \to 10^{n+1}$:} 
+    \begin{center}
+    \begin{tabular}{ccccc}
+    \toprule
+    State & Read & Write & Move & Next \\ \midrule
+    $q_0$ & 1 & 1 & R & $q_1$ \\
+    $q_1$ & 0 & 0 & R & $q_1$ \\
+    $q_1$ & B & 0 & R & $q_{acc}$ \\ \bottomrule
+    \end{tabular}
+    \end{center}
+
+    \item \textbf{TM for $10^n \to 1$:} 
+    \begin{center}
+    \begin{tabular}{ccccc}
+    \toprule
+    State & Read & Write & Move & Next \\ \midrule
+    $q_0$ & 1 & 1 & R & $q_1$ \\
+    $q_1$ & 0 & 0 & R & $q_1$ \\
+    $q_1$ & B & B & L & $q_2$ \\
+    $q_2$ & 0 & B & L & $q_2$ \\
+    $q_2$ & 1 & 1 & R & $q_{acc}$ \\ \bottomrule
+    \end{tabular}
+    \end{center}
+
+    \item \textbf{TM for Swapping 0's and 1's:}
+    \begin{center}
+    \begin{tabular}{ccccc}
+    \toprule
+    State & Read & Write & Move & Next \\ \midrule
+    $q_0$ & 1 & 0 & R & $q_0$ \\
+    $q_0$ & 0 & 1 & R & $q_0$ \\
+    $q_0$ & B & B & R & $q_{acc}$ \\ \bottomrule
+    \end{tabular}
+    \end{center}
+\end{enumerate}
+
+\textbf{Exercise 1}
+\begin{enumerate}
+    \item \textbf{True.} Since $L_1$ and $L_2$ are decidable, there exist TMs $M_1, M_2$ that halt on all inputs. A TM for $L_1 \cup L_2$ runs $M_1$ then $M_2$; it accepts if either accepts and rejects if both reject.
+    
+    \item \textbf{True.} If $M$ decides $L$, we construct $M'$ to decide $\overline{L}$ by swapping the $q_{accept}$ and $q_{reject}$ states of $M$.
+    
+    \item \textbf{True.} Decidable languages are closed under Kleene star. We can use a dynamic programming approach to check if any prefix $w[1 \dots i] \in L$ and the remainder $w[i+1 \dots n] \in L^*$.
+    
+    \item \textbf{True.} To recognize $L_1 \cup L_2$, run TMs $M_1$ and $M_2$ in parallel (interleaving steps). If either halts and accepts, the union TM accepts.
+    
+    \item \textbf{False.} The language $A_{TM}$ (the Halting Problem) is r.e., but its complement $\overline{A_{TM}}$ is not r.e.
+    
+    \item \textbf{True.} We can construct a non-deterministic TM that non-deterministically branches to split the input into $k$ substrings and verifies each substring is in $L$.
+\end{enumerate}
+
+\subsubsection{Question}
+Are there concepts similar to Turing Machines in other fields or are Turing Machines unique to Computer Science?
 
 \section{Synthesis}
 
