@@ -811,6 +811,74 @@ Is the pumping lemma specific only to computer science, or could it be applicabl
 \subsubsection{Question}
 Are there concepts similar to Turing Machines in other fields or are Turing Machines unique to Computer Science?
 
+\subsection{Week 7}
+
+\subsubsection{HW 7}
+
+\textbf{Problems on Decidability: Exercise 2}
+\begin{enumerate}
+    \item \textbf{$L_1 := \{M \mid M \text{ halts on itself}\}$}
+    \begin{itemize}
+        \item \textbf{Recursively Enumerable (r.e.): Yes.} We can build a Universal Turing Machine that takes the description of $M$ and simulates $M$ using its own description $\langle M \rangle$ as input. If $M$ halts, the simulation will eventually halt and accept.
+        \item \textbf{Decidable: No.} This is proven via a reduction from the standard Halting Problem. If we could decide $L_1$, we could decide if any machine $M$ halts on any input $w$ by constructing a new machine $M'$ that ignores its own input and simply runs $M(w)$.
+        \item \textbf{Co-r.e.: No.} If $L_1$ were co-r.e., and since it is already r.e., it would necessarily be decidable (by running both the r.e. and co-r.e. procedures in parallel). Since it is undecidable, it cannot be co-r.e.
+    \end{itemize}
+
+    \item \textbf{$L_2 := \{(M, w) \mid M \text{ halts on the word } w\}$}
+    \begin{itemize}
+        \item \textbf{Recursively Enumerable (r.e.): Yes.} A Universal Turing Machine can simulate $M$ on $w$. If $M$ halts on $w$, the simulator halts and accepts.
+        \item \textbf{Decidable: No.} This is the standard Halting Problem ($ATM$ or $HALT_{TM}$). Alan Turing famously proved that no general algorithm exists to decide this for all possible program-input pairs.
+        \item \textbf{Co-r.e.: No.} Similar to $L_1$, if $L_2$ were co-r.e., it would be decidable. The complement (detecting if a machine loops forever) is not r.e.
+    \end{itemize}
+
+    \item \textbf{$L_3 := \{(M, w, k) \mid M \text{ halts on } w \text{ in at most } k \text{ steps}\}$}
+    \begin{itemize}
+        \item \textbf{Decidable: Yes.} This is the "bounded" version of the halting problem. Unlike the previous two, it is decidable because the search space is finite.
+        \item \textbf{Argument:} To decide $L_3$, simply simulate $M$ on $w$ for exactly $k$ steps:
+        \begin{itemize}
+            \item If the machine enters a halting state at or before step $k$, \textbf{Accept}.
+            \item If the machine has not halted after $k$ steps, \textbf{Reject}.
+        \end{itemize}
+        \item \textbf{R.e. and Co-r.e.: Yes.} Since every decidable language is both r.e. and co-r.e. by definition, $L_3$ fits into all three categories.
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Landau Notation: Exercise 2}
+\begin{enumerate}
+    \item \textbf{Reflexive Property: $f \in \mathcal{O}(f)$} \\
+    Proof: Choose $C = 1$ and $n_0 = 1$. For all $n \geq 1$, it is always true that $f(n) \leq 1 \cdot f(n)$. Since the condition holds, $f \in \mathcal{O}(f)$.
+
+    \item \textbf{Constant Multiples: If $c > 0$ is a constant, then $\mathcal{O}(c \cdot f) = \mathcal{O}(f)$} \\
+    We must show both inclusions:
+    \begin{itemize}
+        \item ($\subseteq$): Let $g \in \mathcal{O}(c \cdot f)$. Then $g(n) \leq C \cdot (c \cdot f(n))$ for $n \geq n_0$. By setting a new constant $C' = C \cdot c$, we get $g(n) \leq C' \cdot f(n)$, so $g \in \mathcal{O}(f)$.
+        \item ($\supseteq$): Let $g \in \mathcal{O}(f)$. Then $g(n) \leq C \cdot f(n)$ for $n \geq n_0$. We can rewrite this as $g(n) \leq \frac{C}{c} \cdot (c \cdot f(n))$. Since $c > 0$, $\frac{C}{c}$ is a valid constant, so $g \in \mathcal{O}(c \cdot f)$.
+    \end{itemize}
+
+    \item \textbf{Dominance: If $f \leq g$ for large enough inputs, then $\mathcal{O}(f) \subseteq \mathcal{O}(g)$} \\
+    Proof: Let $h \in \mathcal{O}(f)$. This means $h(n) \leq C \cdot f(n)$ for $n \geq n_1$. 
+    We are given $f(n) \leq g(n)$ for $n \geq n_2$. 
+    For all $n \geq \max(n_1, n_2)$, we have $h(n) \leq C \cdot f(n) \leq C \cdot g(n)$. 
+    Thus, $h \in \mathcal{O}(g)$.
+
+    \item \textbf{Additive Property: If $\mathcal{O}(f) \subseteq \mathcal{O}(g)$, then $\mathcal{O}(f + h) \subseteq \mathcal{O}(g + h)$} \\
+    Proof: The premise $\mathcal{O}(f) \subseteq \mathcal{O}(g)$ implies $f \in \mathcal{O}(g)$, so $f(n) \leq C \cdot g(n)$ for $n \geq n_0$. 
+    Take any $t \in \mathcal{O}(f + h)$. Then $t(n) \leq C_1(f(n) + h(n))$ for $n \geq n_1$. 
+    Substitute the inequality for $f$: $t(n) \leq C_1(C \cdot g(n) + h(n))$. 
+    Let $C_2 = \max(C, 1)$. Then $t(n) \leq C_1 \cdot C_2(g(n) + h(n))$. 
+    Since $t$ is bounded by a constant times $(g+h)$, $t \in \mathcal{O}(g + h)$.
+
+    \item \textbf{Multiplicative Property: If $h(n) > 0$ and $\mathcal{O}(f) \subseteq \mathcal{O}(g)$, then $\mathcal{O}(f \cdot h) \subseteq \mathcal{O}(g \cdot h)$} \\
+    Proof: From the premise, $f(n) \leq C \cdot g(n)$ for $n \geq n_0$. 
+    Let $t \in \mathcal{O}(f \cdot h)$, meaning $t(n) \leq C_1(f(n) \cdot h(n))$ for $n \geq n_1$. 
+    Multiply the first inequality by $h(n)$. Since $h(n) > 0$, the direction of the inequality remains the same: $f(n) \cdot h(n) \leq C \cdot g(n) \cdot h(n)$. 
+    Therefore, $t(n) \leq C_1(C \cdot g(n) \cdot h(n))$. 
+    Using the new constant $C_2 = C_1 \cdot C$, we find $t \in \mathcal{O}(g \cdot h)$.
+\end{enumerate}
+
+\subsubsection{Question}
+How can we apply Big O algorithms to DFAs, if possible?
+
 \section{Synthesis}
 
 \section{Evidence of Participation}
