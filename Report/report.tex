@@ -879,6 +879,48 @@ Are there concepts similar to Turing Machines in other fields or are Turing Mach
 \subsubsection{Question}
 How can we apply Big O algorithms to DFAs, if possible?
 
+\subsection{Week 8}
+
+\subsubsection{Propositional Logic and SAT} 
+
+\textbf{Exercise 1}
+\begin{enumerate}
+    \item \textbf{Formula $\varphi_1$:}
+    \[ \varphi_1 := \neg((a \wedge b) \vee (\neg c \wedge d)) \]
+    \textit{Conversion:}
+    \begin{align*}
+        \varphi_1 &\equiv \neg(a \wedge b) \wedge \neg(\neg c \wedge d) \tag{De Morgan's} \\
+        &\equiv (\neg a \vee \neg b) \wedge (c \vee \neg d) \tag{CNF Result}
+    \end{align*}
+
+    \item \textbf{Formula $\varphi_2$:}
+    \[ \varphi_2 := \neg((p \vee q) \rightarrow (r \wedge \neg s)) \]
+    \textit{Conversion:}
+    \begin{align*}
+        \varphi_2 &\equiv \neg(\neg(p \vee q) \vee (r \wedge \neg s)) \tag{Implication Rule} \\
+        &\equiv \neg(\neg(p \vee q)) \wedge \neg(r \wedge \neg s) \tag{De Morgan's} \\
+        &\equiv (p \vee q) \wedge (\neg r \vee s) \tag{CNF Result}
+    \end{align*}
+\end{enumerate}
+
+\textbf{Exercise 2}
+\begin{enumerate}
+    \item \textbf{$\psi_1 := (a \vee \neg b) \wedge (\neg a \vee b) \wedge (\neg a \vee \neg b)$} \\
+    \textbf{Status:} Satisfiable \\
+    \textbf{Assignment:} $\{a = \text{False}, b = \text{False}\}$
+
+    \item \textbf{$\psi_2 := (\neg p \vee q) \wedge (\neg q \vee r) \wedge \neg(\neg p \vee r)$} \\
+    \textbf{Status:} Unsatisfiable \\
+    \textbf{Explanation:} The requirements contradict each other. $p$ makes it so $q$ has to be true, but by $q$ being true, the second clause fails because $r$ must be false.
+
+    \item \textbf{$\psi_3 := (x \vee y) \wedge (\neg x \vee y) \wedge (x \vee \neg y) \wedge (\neg x \vee \neg y)$} \\
+    \textbf{Status:} Unsatisfiable \\
+    \textbf{Explanation:} The formula represents all four possible combinations of these two variables, $x$ and $y$. The second two clauses have the exact opposite requirements of the first two clauses.
+\end{enumerate}
+
+\subsubsection{Question}
+Where would propositional logic and SAT be implemented so that it is helpful in simplifying a more complex topic?
+
 \section{Synthesis}
 
 \section{Evidence of Participation}
