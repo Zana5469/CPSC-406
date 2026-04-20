@@ -24,6 +24,7 @@
 \usepackage[utf8]{inputenc}                                                    
 \usepackage[T1]{fontenc}                                                       
 \usepackage{booktabs}
+\usepackage{forest}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -920,6 +921,137 @@ How can we apply Big O algorithms to DFAs, if possible?
 
 \subsubsection{Question}
 Where would propositional logic and SAT be implemented so that it is helpful in simplifying a more complex topic?
+
+\subsection{Week 9}
+
+\subsubsection{Homework: Resolution and Horn Resolution}
+
+\textbf{Exercise 1}
+
+\textbf{1a.}
+$\varphi := (a \vee b) \wedge (\neg a \vee c) \wedge (\neg b \vee c) \wedge (\neg c \vee d) \wedge \neg d$
+
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm]
+  \node (n1) at (0,0) {$\{a, b\}$};
+  \node (n2) at (2,0) {$\{\neg a, c\}$};
+  \node (n6) at (1,-1) {$\{b, c\}$};
+  \draw (n1) -- (n6);
+  \draw (n2) -- (n6);
+
+  \node (n3) at (3,-1) {$\{\neg b, c\}$};
+  \node (n7) at (2,-2) {$\{c\}$};
+  \draw (n6) -- (n7);
+  \draw (n3) -- (n7);
+
+  \node (n4) at (4,-2) {$\{\neg c, d\}$};
+  \node (n8) at (3,-3) {$\{d\}$};
+  \draw (n7) -- (n8);
+  \draw (n4) -- (n8);
+
+  \node (n5) at (5,-3) {$\{\neg d\}$};
+  \node (n9) at (4,-4) {\huge $\square$};
+  \draw (n8) -- (n9);
+  \draw (n5) -- (n9);
+\end{tikzpicture}
+\end{center}
+
+$\varphi$ is unsatisfiable.
+
+\hrule
+\vspace{1cm}
+
+$\psi := p \wedge q \wedge (\neg p \vee \neg q \vee r) \wedge (\neg r \vee s) \wedge \neg s$
+
+1. This is a Horn Formula because the clauses can be categorized into three main types based on their structure:
+\begin{itemize}
+    \item \textbf{Definite Clauses:} contain only one positive literal.
+    \item \textbf{Facts:} a special case of definite clauses where there are no negative literals, forcing a variable to be true.
+    \item \textbf{Goal Clauses:} contain no positive literals, representing constraints or queries to be disproven.
+\end{itemize}
+
+2. \textbf{Resolution Diagram:}
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm]
+  \node (p1) at (0,0) {$\{p\}$};
+  \node (p2) at (2,0) {$\{\neg p, \neg q, r\}$};
+  \node (p6) at (1,-1) {$\{\neg q, r\}$};
+  \draw (p1) -- (p6);
+  \draw (p2) -- (p6);
+
+  \node (p3) at (3,-1) {$\{q\}$};
+  \node (p7) at (2,-2) {$\{r\}$};
+  \draw (p6) -- (p7);
+  \draw (p3) -- (p7);
+
+  \node (p4) at (4,-2) {$\{\neg r, s\}$};
+  \node (p8) at (3,-3) {$\{s\}$};
+  \draw (p7) -- (p8);
+  \draw (p4) -- (p8);
+
+  \node (p5) at (5,-3) {$\{\neg s\}$};
+  \node (p9) at (4,-4) {\huge $\square$};
+  \draw (p8) -- (p9);
+  \draw (p5) -- (p9);
+\end{tikzpicture}
+\end{center}
+
+3. $\psi$ is unsatisfiable.
+
+\textbf{Exercise 2}
+
+\textbf{1. Formalization}
+\textbf{Propositional Variables:}
+\begin{itemize}
+    \item $GPS$: GPS lock is valid.
+    \item $BH$: Battery health is good.
+    \item $MOK$: Manual override key is present.
+    \item $MP$: Motor power is enabled.
+\end{itemize}
+
+\textbf{Controller Policy ($\Phi$):}
+\begin{enumerate}
+    \item $(GPS \wedge BH) \rightarrow MP \equiv (\neg GPS \vee \neg BH \vee MP)$ 
+    \item $MOK \rightarrow MP \equiv (\neg MOK \vee MP)$ 
+    \item $\neg BH \rightarrow \neg MP \equiv (BH \vee \neg MP)$ 
+\end{enumerate}
+
+\textbf{Incident Log Reports ($\gamma$):}
+Based on the log (GPS valid, battery unhealthy, manual override present, motor power enabled):
+\[ \gamma := GPS \wedge \neg BH \wedge MOK \wedge MP \] 
+
+\textbf{2. Set of Clauses}
+The combined knowledge base $\Phi \wedge \gamma$ results in the following clauses:
+\[ \mathcal{C} = \{ \{\neg GPS, \neg BH, MP\}, \{\neg MOK, MP\}, \{BH, \neg MP\}, \{GPS\}, \{\neg BH\}, \{MOK\}, \{MP\} \} \] 
+
+\textbf{3. Consistency Analysis}
+    \begin{forest}
+    for tree={
+        math content, 
+        grow=north,   
+        edge={-},
+        l sep=1.5em,
+        s sep=2em
+    }
+    [ {\square} 
+        [ {\{\neg MP\}} 
+            [ {\{BH, \neg MP\}}, tier=top ] 
+            [ {\{\neg BH\}}, tier=top ]
+        ]
+        [ {\{MP\}} 
+            [ {\{MP\}}, tier=top, no edge ] % This removes the line
+        ] 
+    ]
+\end{forest}
+
+\textbf{Conclusion:} 
+Because the empty clause $\square$ is derived, the Log is \textbf{inconsistent} with the Policy.
+
+\textbf{4. Conflict Identification}
+The policy dictates that if battery health is bad ($\neg BH$), motor power must be blocked ($\neg MP$). However, the log reports the motor power was enabled ($MP$). This occurred because the manual override key ($MOK$) was used, which allowed power despite the battery safety interlock.
+
+\subsubsection{Question}
+Can we use resolution or Horn's resolution in any aspects of turing machines?
 
 \section{Synthesis}
 
