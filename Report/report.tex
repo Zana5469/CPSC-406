@@ -1053,6 +1053,72 @@ The policy dictates that if battery health is bad ($\neg BH$), motor power must 
 \subsubsection{Question}
 Can we use resolution or Horn's resolution in any aspects of turing machines?
 
+\subsection{Week 10}
+
+\subsubsection{HW 10}
+
+\textbf{Exercise 4.3-1}
+\textbf{Problem:} Show that the solution of $T(n) = T(n-1) + n$ is $O(n^2)$.
+
+\textbf{Solution:}
+We use the substitution method. We want to show that $T(n) \leq cn^2$ for some constant $c > 0$ and $n \geq n_0$.
+\begin{itemize}
+    \item \textbf{Inductive Hypothesis:} Assume $T(k) \leq ck^2$ for all $k < n$.
+    \item \textbf{Inductive Step:}
+    \begin{align*}
+    T(n) &= T(n-1) + n \\
+    &\leq c(n-1)^2 + n \\
+    &= c(n^2 - 2n + 1) + n \\
+    &= cn^2 - 2cn + c + n \\
+    &= cn^2 - (2cn - c - n)
+    \end{align*}
+    To satisfy $T(n) \leq cn^2$, we need $2cn - c - n \geq 0$.
+    \begin{align*}
+    n(2c - 1) &\geq c \implies n \geq \frac{c}{2c - 1}
+    \end{align*}
+    For $c=1$, this holds for $n \geq 1$. Thus, $T(n) = O(n^2)$.
+\end{itemize}
+
+\textbf{Exercise 4.3-2}
+\textbf{Problem:} Show that the solution of $T(n) = T(\lceil n/2 \rceil) + 1$ is $O(\lg n)$.
+
+\textbf{Solution:}
+We want to show $T(n) \leq c \lg(n - b)$ for constants $c, b$.
+\begin{itemize}
+    \item \textbf{Inductive Hypothesis:} Assume $T(k) \leq c \lg(k - b)$ for $k < n$.
+    \item \textbf{Inductive Step:}
+    \begin{align*}
+    T(n) &\leq c \lg(\lceil n/2 \rceil - b) + 1 \\
+    &\leq c \lg\left(\frac{n+1}{2} - b\right) + 1 \\
+    &= c \lg\left(\frac{n + 1 - 2b}{2}\right) + 1 \\
+    &= c \lg(n + 1 - 2b) - c \lg 2 + 1 \\
+    &= c \lg(n + 1 - 2b) - c + 1
+    \end{align*}
+    We need $c \lg(n + 1 - 2b) - c + 1 \leq c \lg(n - b)$. 
+    Choosing $b=1$, we get $c \lg(n - 1) - c + 1 \leq c \lg(n - 1)$, which holds if $-c + 1 \leq 0$, i.e., $c \geq 1$.
+\end{itemize}
+
+\textbf{Exercise 4.3-3}
+\textbf{Problem:} Show that $T(n) = 2T(\lfloor n/2 \rfloor) + n$ is $\Omega(n \lg n)$ and conclude $T(n) = \Theta(n \lg n)$.
+
+\textbf{Solution:}
+We want to show $T(n) \geq cn \lg n$.
+\begin{itemize}
+    \item \textbf{Inductive Hypothesis:} Assume $T(k) \geq ck \lg k$ for $k < n$.
+    \item \textbf{Inductive Step:}
+    \begin{align*}
+    T(n) &= 2T(\lfloor n/2 \rfloor) + n \\
+    &\geq 2c \lfloor n/2 \rfloor \lg \lfloor n/2 \rfloor + n \\
+    &\geq 2c \left(\frac{n-1}{2}\right) \lg \left(\frac{n-1}{2}\right) + n \\
+    &= c(n-1)(\lg(n-1) - 1) + n \\
+    &= c(n-1)\lg(n-1) - c(n-1) + n
+    \end{align*}
+    Since $T(n) = O(n \lg n)$ is known and we have shown $T(n) = \Omega(n \lg n)$, then $T(n) = \Theta(n \lg n)$.
+\end{itemize}
+
+\subsubsection{Question}
+How does proving recurrences help us apply concepts related to Big O to to programming?
+
 \section{Synthesis}
 
 \section{Evidence of Participation}
