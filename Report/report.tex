@@ -25,6 +25,7 @@
 \usepackage[T1]{fontenc}                                                       
 \usepackage{booktabs}
 \usepackage{forest}
+\usepackage{enumitem}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -1118,6 +1119,111 @@ We want to show $T(n) \geq cn \lg n$.
 
 \subsubsection{Question}
 How does proving recurrences help us apply concepts related to Big O to to programming?
+
+\subsection{Week 11}
+
+\subsubsection{HW 11}
+
+\textbf{Exercise 4.4-2: $T(n) = T(n/2) + n^2$} \\
+\textbf{Recursion Tree Analysis:}
+\begin{center}
+\begin{tikzpicture}[level distance=1.2cm, 
+  every node/.style={circle, draw, minimum size=1.2cm}]
+  \node {$n^2$}
+    child {node {$(n/2)^2$}
+      child {node {$(n/4)^2$}
+        child {node [draw=none] {$\vdots$}
+          child {node {$1$}}
+        }
+      }
+    };
+\end{tikzpicture}
+\end{center}
+\textit{Note: Since $a=1$, the tree is a single linear chain of subproblems.}
+
+\vspace{2em}
+
+\textbf{Exercise 4.4-5: $T(n) = T(n-1) + T(n/2) + n$} \\
+\textbf{Recursion Tree Analysis:}
+\begin{center}
+\begin{tikzpicture}[level distance=1.5cm,
+  level 1/.style={sibling distance=4cm},
+  level 2/.style={sibling distance=2cm},
+  every node/.style={circle, draw, minimum size=1cm, font=\small}]
+  
+  \node {$n$}
+    child {node {$n-1$}
+      child {node {$n-2$}
+        child {node [draw=none] {$\vdots$}}
+        child {node [draw=none] {$\vdots$}}
+      }
+      child {node {$\frac{n-1}{2}$}
+        child {node [draw=none] {$\vdots$}}
+        child {node [draw=none] {$\vdots$}}
+      }
+    }
+    child {node {$n/2$}
+      child {node {$\frac{n}{2}-1$}
+        child {node [draw=none] {$\vdots$}}
+        child {node [draw=none] {$\vdots$}}
+      }
+      child {node {$n/4$}
+        child {node [draw=none] {$\vdots$}}
+        child {node [draw=none] {$\vdots$}}
+      }
+    };
+\end{tikzpicture}
+\end{center}
+\textit{Note: This tree is highly unbalanced. The left branches ($n-1$) reach a depth of $n$, while the right branches ($n/2$) reach a depth of $\lg n$.}
+
+\textbf{Exercise 4.5-1: Master Theorem Applications}
+
+\begin{enumerate}[label=\alph*.]
+    \item \textbf{$T(n) = 2T(n/4) + 1$} \\
+    $f(n) = 1$. Since $1 = O(n^{1/2 - \epsilon})$ for $\epsilon = 0.5$, this fits \textbf{Case 1}. \\
+    \textit{Result:} $T(n) = \Theta(\sqrt{n})$.
+
+    \item \textbf{$T(n) = 2T(n/4) + \sqrt{n}$} \\
+    $f(n) = \sqrt{n}$. Since $\sqrt{n} = \Theta(n^{1/2})$, this fits \textbf{Case 2}. \\
+    \textit{Result:} $T(n) = \Theta(\sqrt{n} \lg n)$.
+
+    \item \textbf{$T(n) = 2T(n/4) + n$} \\
+    $f(n) = n$. Since $n = \Omega(n^{1/2 + \epsilon})$ for $\epsilon = 0.5$, and the regularity condition $2(n/4) \leq cn$ holds for $c=1/2$, this fits \textbf{Case 3}. \\
+    \textit{Result:} $T(n) = \Theta(n)$.
+
+    \item \textbf{$T(n) = 2T(n/4) + n^2$} \\
+    $f(n) = n^2$. Since $n^2 = \Omega(n^{1/2 + \epsilon})$ for $\epsilon = 1.5$, and the regularity condition $2(n/4)^2 \leq cn^2$ holds for $c=1/8$, this fits \textbf{Case 3}. \\
+    \textit{Result:} $T(n) = \Theta(n^2)$.
+\end{enumerate}
+
+\textbf{Extra Credit:}
+\textbf{Exercise 4.5-4: $T(n) = 4T(n/2) + n^2 \lg n$}
+\textbf{Analysis of Applicability:}
+To use the Master Method, we identify $a = 4$, $b = 2$, and $f(n) = n^2 \lg n$.
+The watershed function is $n^{\log_b a} = n^{\log_2 4} = n^2$.
+
+\begin{itemize}
+    \item We compare $f(n) = n^2 \lg n$ with $n^{\log_b a} = n^2$.
+    \item While $f(n)$ is asymptotically larger than $n^2$, it is not \textit{polynomially} larger. For any $\epsilon > 0$, $f(n) \neq \Omega(n^{2+\epsilon})$ because the $\lg n$ factor grows slower than any polynomial $n^\epsilon$.
+    \item Consequently, the recurrence falls into the "gap" between Case 2 and Case 3 of the standard Master Theorem.
+\end{itemize}
+
+\textbf{Conclusion on Applicability:} 
+No, the standard Master Method cannot be applied because $f(n)$ is not polynomially larger than $n^{\log_b a}$.
+
+\vspace{1em}
+
+\textbf{Asymptotic Upper Bound:}
+Although the standard version fails, we can use the \textbf{Extended Master Theorem} (Case 2), which states that if $f(n) = \Theta(n^{\log_b a} \lg^k n)$ for $k \geq 0$, then $T(n) = \Theta(n^{\log_b a} \lg^{k+1} n)$.
+\begin{itemize}
+    \item Here, $n^{\log_b a} = n^2$ and $f(n) = n^2 \lg^1 n$, so $k = 1$.
+    \item $T(n) = \Theta(n^2 \lg^{1+1} n) = \Theta(n^2 \lg^2 n)$.
+\end{itemize}
+
+\textbf{Result:} $T(n) = O(n^2 \lg^2 n)$.
+
+\subsubsection{Question}
+How can the Master Theorem help us with Turing Machines, if it's possible?
 
 \section{Synthesis}
 
